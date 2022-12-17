@@ -4,16 +4,13 @@ import { ClientProxy } from '@nestjs/microservices';
 @Injectable()
 export class AppService {
   constructor(@Inject('MATH_SERVICE') private client: ClientProxy) {}
-  async onApplicationBootstrap() {
-    await this.client.connect();
-  }
-
   async microServicesTest() {
-    const emitTest = this.client.emit('sum', [1, 1]);
-    const sendTest = this.client.send({ cmd: 'sum' }, [1, 1]);
+    const emitTest = this.client.emit('sum', [1, 1]).subscribe(console.log);
 
-    console.log({ emitTest, sendTest });
+    const sendTest = await this.client
+      .send({ cmd: 'sum' }, [1, 2])
+      .subscribe(console.log);
 
-    return { emitTest, sendTest };
+    return 'hello world';
   }
 }
